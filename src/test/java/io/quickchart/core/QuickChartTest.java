@@ -1,6 +1,11 @@
 package io.quickchart.core;
 
+import java.util.List;
+
 import io.quickchart.QuickChart;
+import io.quickchart.vo.ChartConfig;
+import io.quickchart.vo.ChartData;
+import io.quickchart.vo.Dataset;
 import junit.framework.TestCase;
 
 public class QuickChartTest extends TestCase {
@@ -101,5 +106,28 @@ public class QuickChartTest extends TestCase {
 		assertTrue(url.indexOf("50%2C+60%2C+") > -1);
 		assertTrue(url.indexOf("v=2.9.4") > -1);
 		assertTrue(url.indexOf("bkg=") < 0);
+	}
+
+	public void testgetUrlV2(){
+		QuickChart chart = new QuickChart();
+		chart.setVersion("2.9.4");
+		chart.setWidth(500);
+		chart.setHeight(300);
+		ChartConfig config = new ChartConfig();
+		config.setType("bar");
+		ChartData data = new ChartData();
+		data.setLabels(List.of("Q1", "Q2", "Q3", "Q4"));
+		Dataset dataset = new Dataset();
+		dataset.setLabel("Users");
+		dataset.setData(List.of("50", "60", "70", "180"));
+		Dataset dataset2 = new Dataset();
+		dataset2.setLabel("Revenue");
+		dataset2.setData(List.of("100", "200", "300", "400"));
+		data.setDatasets(List.of(dataset, dataset2));
+		config.setData(data);
+		chart.setChartConfig(config);
+		String url = chart.getUrlV2();
+		System.out.println(url);
+		assertTrue(url.indexOf("https://quickchart.io/chart") == 0);
 	}
 }

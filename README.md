@@ -57,6 +57,39 @@ System.out.println(qc.getUrl());
 // https://quickchart.io/chart?c=%7B%22chart%22%3A+%7B%22type%22%3A+%22bar%22%2C+%22data%22%3A+%7B%22labels%22%3A+%5B%22Hello+world%22%2C+%22Test%22%5D%2C+%22datasets%22%3A+%5B%7B%22label%22%3A+%22Foo%22%2C+%22data%22%3A+%5B1%2C+2%5D%7D%5D%7D%7D%7D&w=600&h=300&bkg=%23ffffff&devicePixelRatio=2.0&f=png
 ```
 
+If you want to provide your Chart.js config in a neat manner instead of doing all the string formatting, you can use `getUrlV2()`
+
+Example:
+```java
+// Instanciate ChartConfig object
+ChartConfig config = new ChartConfig();
+
+// Set the char type. e.g bar, line etc
+config.setType("bar");
+//Instantiate ChartData
+ChartData data = new ChartData();
+// Set the labels and chart Data
+data.setLabels(List.of("Q1", "Q2", "Q3", "Q4"));  //labels
+
+//Dataset 1
+Dataset dataset = new Dataset();
+dataset.setLabel("Users");
+dataset.setData(List.of("50", "60", "70", "180"));
+
+//Dataset 2
+Dataset dataset2 = new Dataset();
+dataset2.setLabel("Revenue");
+dataset2.setData(List.of("100", "200", "300", "400"));
+
+//Set the required Data
+data.setDatasets(List.of(dataset, dataset2));
+config.setData(data);
+chart.setChartConfig(config);
+
+//get the URL
+chart.getUrlV2()
+
+```
 If you have a long or complicated chart, use `getShortUrl()` to get a fixed-length URL using the quickchart.io web service (note that these URLs only persist for a short time unless you have a subscription):
 
 ```java
@@ -79,6 +112,9 @@ You can set the following properties:
 ### setConfig(String)
 The Chart.js chart configuration.
 
+### setChartConfig(Object)
+The Chart.js config in terms of Java Object
+
 ### setWidth(Integer)
 Width of the chart image in pixels.  Defaults to 500
 
@@ -96,7 +132,6 @@ The Chart.js version of the chart.  See [QuickChart documentation](https://quick
 
 ### setKey(String)
 API key (not required)
-
 ---
 
 ## Creating chart URLs

@@ -9,6 +9,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import io.quickchart.util.ChartUtils;
+import io.quickchart.vo.ChartConfig;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,6 +38,7 @@ public class QuickChart {
 	private String host;
 	private Integer port;
 
+	private ChartConfig chartConfig;
 	/**
 	 * Create a default QuickChart object.
 	 */
@@ -185,6 +189,26 @@ public class QuickChart {
 		this.config = config;
 	}
 
+
+	/**
+	 * Get the Chart.js config
+	 *
+	 * @return Chart.js config
+	 */
+	public ChartConfig getChartConfig() {
+		return chartConfig;
+	}
+
+	/**
+	 * Set the Chart.js chartConfig to render
+	 *
+	 * @param chartConfig Chart.js config. But in terms of ChartConfig object
+	 * 			 instead of JSON string.
+	 */
+	public void setChartConfig(ChartConfig chartConfig) {
+		this.chartConfig = chartConfig;
+	}
+
 	/**
 	 * Generate a URL that displays a chart
 	 *
@@ -211,6 +235,37 @@ public class QuickChart {
 		if (this.version != null && !this.version.isEmpty()) {
 			builder.addParameter("v", this.version);
 		}
+		return builder.toString();
+	}
+
+	/**
+	 * Generate a URL that displays a chart but takes ChartConfig object as input
+	 * instead of chart string
+	 *
+	 * @return URL that will display chart when rendered
+	 */
+	public String getUrlV2(){
+		URIBuilder builder = new URIBuilder();
+		builder.setScheme(this.scheme);
+		builder.setHost(this.host);
+		if (port != 80 && port != 443) {
+			builder.setPort(this.port);
+		}
+		builder.setPath("/chart");
+		builder.addParameter("w", this.width.toString());
+		builder.addParameter("h", this.height.toString());
+		builder.addParameter("devicePixelRatio", this.devicePixelRatio.toString());
+		if (!this.backgroundColor.equals("transparent")) {
+			builder.addParameter("bkg", this.backgroundColor);
+		}
+		builder.addParameter("c", ChartUtils.getChartConfigJSON(this.getChartConfig()));
+		if (this.key != null && !this.key.isEmpty()) {
+			builder.addParameter("key", this.key);
+		}
+		if (this.version != null && !this.version.isEmpty()) {
+			builder.addParameter("v", this.version);
+		}
+		System.out.println(builder.toString());
 		return builder.toString();
 	}
 
